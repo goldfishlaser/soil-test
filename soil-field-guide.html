@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Putting a Name to Your Soil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#e9e1c9;
+    --paper-card:#fbf8ef;
+    --ink:#2a2116;
+    --ink-soft:#5b4f3c;
+    --clay:#7a4b27;
+    --clay-dark:#5a3719;
+    --olive:#5c6b3b;
+    --olive-dark:#43502a;
+    --ochre:#c0932e;
+    --ochre-soft:#f1e3bd;
+    --line:#c8bc9c;
+    --danger:#8a4a3a;
+
+    box-sizing:border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#231d14;
+      --paper-card:#2d271b;
+      --ink:#ede4cf;
+      --ink-soft:#c3b8a0;
+      --clay:#d0995f;
+      --clay-dark:#e8b27e;
+      --olive:#9fb26a;
+      --olive-dark:#b8cb87;
+      --ochre:#e0b455;
+      --ochre-soft:#3a3220;
+      --line:#4a4230;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#231d14;
+    --paper-card:#2d271b;
+    --ink:#ede4cf;
+    --ink-soft:#c3b8a0;
+    --clay:#d0995f;
+    --clay-dark:#e8b27e;
+    --olive:#9fb26a;
+    --olive-dark:#b8cb87;
+    --ochre:#e0b455;
+    --ochre-soft:#3a3220;
+    --line:#4a4230;
+  }
+
+  html,body{ height:100%; }
+  html{ scroll-padding-top: env(safe-area-inset-top, 0px); }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Public Sans', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--ochre-soft); }
+
+  .wrap{
+    max-width:680px;
+    margin:0 auto;
+    padding:28px 20px 64px;
+  }
+
+  header.page{
+    margin-bottom:22px;
+  }
+  .eyebrow-row{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .kicker{
+    font-size:13px;
+    color:var(--ink-soft);
+    letter-spacing:0.01em;
+  }
+  h1{
+    font-family:'Fraunces', Georgia, serif;
+    font-weight:700;
+    font-size:clamp(28px, 6vw, 38px);
+    line-height:1.05;
+    margin:4px 0 8px;
+    letter-spacing:-0.01em;
+  }
+  .sub{
+    color:var(--ink-soft);
+    font-size:15px;
+    line-height:1.5;
+    max-width:52ch;
+  }
+
+  nav.tabs{
+    display:flex;
+    gap:4px;
+    overflow-x:auto;
+    margin:22px 0 20px;
+    border-bottom:1px solid var(--line);
+    -ms-overflow-style:none;
+    scrollbar-width:none;
+  }
+  nav.tabs::-webkit-scrollbar{ display:none; }
+  .tab{
+    flex:0 0 auto;
+    padding:10px 4px;
+    margin-right:20px;
+    background:none;
+    border:none;
+    border-bottom:2px solid transparent;
+    font-family:'Public Sans',sans-serif;
+    font-size:14.5px;
+    font-weight:600;
+    color:var(--ink-soft);
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .tab:hover{ color:var(--ink); }
+  .tab.active{
+    color:var(--ink);
+    border-bottom-color:var(--ochre);
+  }
+
+  .panel{ display:none; }
+  .panel.active{ display:block; }
+
+  .crumbs{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-bottom:16px;
+    min-height:1px;
+  }
+  .crumb{
+    font-size:12px;
+    color:var(--ink-soft);
+    background:var(--paper-card);
+    border:1px solid var(--line);
+    padding:4px 9px;
+    border-radius:3px;
+    line-height:1.3;
+  }
+  .crumb b{ color:var(--ink); font-weight:600; }
+
+  .card{
+    background:var(--paper-card);
+    border:1.5px solid var(--clay);
+    border-radius:4px;
+    padding:22px;
+  }
+  .card + .actions{ margin-top:16px; }
+
+  .card .label{
+    font-size:12px;
+    font-weight:700;
+    color:var(--clay);
+    margin-bottom:8px;
+  }
+  .card p.q{
+    font-family:'Fraunces', Georgia, serif;
+    font-size:clamp(19px, 4.4vw, 22px);
+    font-weight:600;
+    line-height:1.32;
+    margin:0;
+  }
+  .card p.info{
+    font-size:15.5px;
+    line-height:1.6;
+    margin:0;
+    color:var(--ink);
+  }
+
+  .yesno{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:18px;
+  }
+  button.choice{
+    font-family:'Public Sans',sans-serif;
+    font-size:15px;
+    font-weight:700;
+    padding:13px 10px;
+    border-radius:4px;
+    cursor:pointer;
+    border:1.5px solid var(--olive);
+    background:transparent;
+    color:var(--olive-dark);
+    transition:transform .08s ease, background .15s ease, color .15s ease;
+  }
+  button.choice.yes{
+    background:var(--olive);
+    color:var(--paper-card);
+    border-color:var(--olive);
+  }
+  button.choice:hover{ transform:translateY(-1px); }
+  button.choice.yes:hover{ background:var(--olive-dark); border-color:var(--olive-dark); }
+  button.choice.no:hover{ background:var(--ochre-soft); }
+  button.choice:focus-visible{ outline:2px solid var(--clay); outline-offset:2px; }
+
+  .continue-row{ margin-top:18px; }
+  button.primary{
+    font-family:'Public Sans',sans-serif;
+    font-weight:700;
+    font-size:15px;
+    padding:12px 20px;
+    border-radius:4px;
+    border:1.5px solid var(--clay);
+    background:var(--clay);
+    color:var(--paper-card);
+    cursor:pointer;
+  }
+  button.primary:hover{ background:var(--clay-dark); border-color:var(--clay-dark); }
+  button.ghost{
+    font-family:'Public Sans',sans-serif;
+    font-weight:600;
+    font-size:14px;
+    padding:10px 16px;
+    border-radius:4px;
+    border:1.5px solid var(--line);
+    background:transparent;
+    color:var(--ink-soft);
+    cursor:pointer;
+  }
+  button.ghost:hover{ color:var(--ink); border-color:var(--ink-soft); }
+
+  .actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+
+  .result{
+    background:var(--ochre-soft);
+    border:1.5px solid var(--ochre);
+    border-radius:4px;
+    padding:24px 22px;
+  }
+  .result .tag{
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:0.02em;
+    color:var(--clay-dark);
+    margin-bottom:6px;
+  }
+  .result h2{
+    font-family:'Fraunces', Georgia, serif;
+    font-size:clamp(24px, 6vw, 30px);
+    font-weight:700;
+    margin:0 0 10px;
+    line-height:1.08;
+  }
+  .result p{
+    font-size:15.5px;
+    line-height:1.6;
+    margin:0;
+    color:var(--ink);
+  }
+
+  .backrow{
+    margin-bottom:10px;
+  }
+  button.link{
+    background:none;
+    border:none;
+    padding:0;
+    font-family:'Public Sans',sans-serif;
+    font-size:13.5px;
+    font-weight:600;
+    color:var(--ink-soft);
+    cursor:pointer;
+    text-decoration:underline;
+    text-underline-offset:2px;
+  }
+  button.link:hover{ color:var(--ink); }
+
+  /* checklist styling (pit test / weeds) */
+  .intro{
+    font-size:14.5px;
+    line-height:1.6;
+    color:var(--ink-soft);
+    margin-bottom:18px;
+  }
+  .check-item{
+    background:var(--paper-card);
+    border:1.5px solid var(--line);
+    border-radius:4px;
+    padding:16px 16px;
+    margin-bottom:10px;
+  }
+  .check-item p{
+    font-size:15px;
+    line-height:1.55;
+    margin:0 0 10px;
+  }
+  .toggle-row{
+    display:flex;
+    gap:8px;
+  }
+  .toggle{
+    flex:1;
+    font-family:'Public Sans',sans-serif;
+    font-weight:700;
+    font-size:13.5px;
+    padding:9px 8px;
+    border-radius:3px;
+    border:1.5px solid var(--line);
+    background:transparent;
+    color:var(--ink-soft);
+    cursor:pointer;
+  }
+  .toggle.selected.yes{ background:var(--olive); color:var(--paper-card); border-color:var(--olive); }
+  .toggle.selected.no{ background:var(--ink-soft); color:var(--paper-card); border-color:var(--ink-soft); }
+  .toggle:hover{ border-color:var(--ink-soft); }
+
+  .findings{
+    margin-top:20px;
+  }
+  .finding{
+    background:var(--ochre-soft);
+    border:1.5px solid var(--ochre);
+    border-radius:4px;
+    padding:16px 18px;
+    margin-bottom:10px;
+  }
+  .finding .tag{ font-size:12px; font-weight:700; color:var(--clay-dark); margin-bottom:4px; }
+  .finding h3{ font-family:'Fraunces',Georgia,serif; font-size:19px; margin:0 0 6px; }
+  .finding p{ font-size:14.5px; line-height:1.55; margin:0; }
+  .none-found{
+    font-size:14.5px;
+    color:var(--ink-soft);
+    padding:14px 2px;
+  }
+
+  .kit-card{
+    background:var(--paper-card);
+    border:1.5px solid var(--line);
+    border-radius:4px;
+    padding:20px;
+  }
+  .kit-card p{ font-size:15px; line-height:1.65; margin:0 0 12px; }
+  .kit-card p:last-child{ margin-bottom:0; }
+
+  footer.note{
+    margin-top:34px;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    line-height:1.6;
+    border-top:1px solid var(--line);
+    padding-top:14px;
+  }
+
+  @media (max-width:420px){
+    .yesno{ grid-template-columns:1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="page">
+    <div class="eyebrow-row">
+      <span class="kicker">A field guide</span>
+    </div>
+    <h1>Putting a Name to Your Soil</h1>
+    <p class="sub">Walk through the walkover test, the hand test, and the pit test to work out what you're growing in — plus a quick read on drainage and pH from the weeds already there.</p>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-panel="walkover">Walkover test</button>
+    <button class="tab" data-panel="hand">Hand test</button>
+    <button class="tab" data-panel="pit">Pit test</button>
+    <button class="tab" data-panel="weeds">Weeds &amp; pH</button>
+    <button class="tab" data-panel="kit">Soil kit test</button>
+  </nav>
+
+  <!-- WALKOVER -->
+  <section class="panel active" id="panel-walkover">
+    <div id="walkover-crumbs" class="crumbs"></div>
+    <div id="walkover-backrow" class="backrow"></div>
+    <div id="walkover-stage"></div>
+  </section>
+
+  <!-- HAND TEST -->
+  <section class="panel" id="panel-hand">
+    <div id="hand-crumbs" class="crumbs"></div>
+    <div id="hand-backrow" class="backrow"></div>
+    <div id="hand-stage"></div>
+  </section>
+
+  <!-- PIT TEST -->
+  <section class="panel" id="panel-pit">
+    <p class="intro">Choose a day when the soil is moist and dig a pit 2 ft × 2 ft × 2 ft. Answer what you find, then see your results below. This pit doubles as a drainage-test hole later on.</p>
+    <div id="pit-checklist"></div>
+    <div class="continue-row">
+      <button class="primary" id="pit-reveal">See results</button>
+    </div>
+    <div class="findings" id="pit-findings"></div>
+  </section>
+
+  <!-- WEEDS -->
+  <section class="panel" id="panel-weeds">
+    <p class="intro">These signs read independently of each other — check off whatever applies to your plot.</p>
+    <div id="weeds-checklist"></div>
+    <div class="findings" id="weeds-findings"></div>
+  </section>
+
+  <!-- SOIL KIT -->
+  <section class="panel" id="panel-kit">
+    <div class="kit-card">
+      <p>Several kits test the nitrogen, phosphate, potash and pH content of the soil. Some use test tubes and indicator solutions; others use a probe you push straight into the ground.</p>
+      <p>These kits give a reasonably accurate read on whether your soil needs liming — but they're less reliable for pinning down exact fertilizer needs, since translating the readings into a practical feeding plan is the hard part.</p>
+    </div>
+  </section>
+
+  <footer class="note">Based on the classic four-test method — walkover, hand, pit and soil kit — for identifying soil type, drainage and pH without lab equipment.</footer>
+</div>
+
+<script>
+(function(){
+
+  // ---------- generic engine ----------
+  function makeEngine(cfg){
+    var state = { current: cfg.startId, path: [] };
+
+    function render(){
+      var stage = document.getElementById(cfg.stageId);
+      var crumbsEl = document.getElementById(cfg.crumbsId);
+      var backEl = document.getElementById(cfg.backId);
+      stage.innerHTML = '';
+      crumbsEl.innerHTML = '';
+      backEl.innerHTML = '';
+
+      // breadcrumbs
+      state.path.forEach(function(step){
+        var c = document.createElement('span');
+        c.className = 'crumb';
+        c.innerHTML = step.q + ' — <b>' + step.a + '</b>';
+        crumbsEl.appendChild(c);
+      });
+
+      // back button
+      if(state.path.length){
+        var back = document.createElement('button');
+        back.className = 'link';
+        back.textContent = '← Back one step';
+        back.onclick = function(){
+          var last = state.path.pop();
+          state.current = last.from;
+          render();
+        };
+        backEl.appendChild(back);
+      }
+
+      var node = cfg.nodes[state.current];
+      var card = document.createElement('div');
+      card.className = 'card';
+
+      if(node.type === 'question'){
+        card.innerHTML = '<div class="label">Question</div><p class="q">' + node.text + '</p>';
+        var yn = document.createElement('div');
+        yn.className = 'yesno';
+        var yesBtn = document.createElement('button');
+        yesBtn.className = 'choice yes';
+        yesBtn.textContent = 'Yes';
+        yesBtn.onclick = function(){
+          state.path.push({ from: state.current, q: node.text, a: 'Yes' });
+          state.current = node.yes;
+          render();
+        };
+        var noBtn = document.createElement('button');
+        noBtn.className = 'choice no';
+        noBtn.textContent = 'No';
+        noBtn.onclick = function(){
+          state.path.push({ from: state.current, q: node.text, a: 'No' });
+          state.current = node.no;
+          render();
+        };
+        yn.appendChild(yesBtn);
+        yn.appendChild(noBtn);
+        card.appendChild(yn);
+        stage.appendChild(card);
+      }
+      else if(node.type === 'info'){
+        card.innerHTML = '<div class="label">Do this</div><p class="info">' + node.text + '</p>';
+        stage.appendChild(card);
+        var row = document.createElement('div');
+        row.className = 'continue-row';
+        var cont = document.createElement('button');
+        cont.className = 'primary';
+        cont.textContent = 'Continue';
+        cont.onclick = function(){
+          state.path.push({ from: state.current, q: node.text, a: '—' });
+          state.current = node.next;
+          render();
+        };
+        row.appendChild(cont);
+        stage.appendChild(row);
+      }
+      else if(node.type === 'result'){
+        var res = document.createElement('div');
+        res.className = 'result';
+        res.innerHTML = '<div class="tag">Result</div><h2>' + node.title + '</h2><p>' + node.desc + '</p>';
+        stage.appendChild(res);
+        var actions = document.createElement('div');
+        actions.className = 'actions';
+        actions.style.marginTop = '16px';
+        var restart = document.createElement('button');
+        restart.className = 'ghost';
+        restart.textContent = 'Start over';
+        restart.onclick = function(){
+          state.current = cfg.startId;
+          state.path = [];
+          render();
+        };
+        actions.appendChild(restart);
+        stage.appendChild(actions);
+      }
+    }
+
+    render();
+    return { render: render, state: state };
+  }
+
+  // ---------- WALKOVER TEST ----------
+  var walkoverNodes = {
+    start: {
+      type:'info',
+      text:'Choose a day when the soil is moist and the plants are actively growing. Walk the plot, looking carefully at the soil, weeds and plants.',
+      next:'stones'
+    },
+    stones: {
+      type:'question',
+      text:'Are there 30 or more large and small stones per square yard?',
+      yes:'r_stony', no:'dark'
+    },
+    dark: {
+      type:'question',
+      text:'Is the soil dark brown or grey, rich in plant remains, and spongy in texture?',
+      yes:'r_peaty', no:'r_none'
+    },
+    r_stony: {
+      type:'result', title:'Stony soil',
+      desc:'Plenty of stones at the surface and below. Stony ground warms up quickly in spring and drains freely, but the stones make digging harder and can deform root crops. Sieve out the largest ones as you cultivate, then move on to the Hand Test on a stone-free sample to find the underlying texture.'
+    },
+    r_peaty: {
+      type:'result', title:'Peaty soil',
+      desc:'Dark, spongy and full of part-decomposed plant matter. Peaty soil holds moisture well and is easy to work, but it can be acidic and short on some nutrients. Continue with the walkover test, then run the Hand Test to confirm the texture underneath.'
+    },
+    r_none: {
+      type:'result', title:'No stony or peaty signs',
+      desc:'Nothing especially stony or peaty here. Head to the Hand Test tab to work out the soil\u2019s texture, and check the Weeds &amp; pH tab for what the existing plants tell you about drainage and acidity.'
+    }
+  };
+
+  // ---------- HAND TEST ----------
+  var handNodes = {
+    start: {
+      type:'question',
+      text:'Is the soil sticky on a wet day — does it cling to your footwear in large lumps under such conditions?',
+      yes:'strongball', no:'knead'
+    },
+    knead: {
+      type:'info',
+      text:'Pick up a handful of soil. If it is dry, moisten it just enough to hold together. Knead it in the palm of your hand to break down any lumps.',
+      next:'gritty'
+    },
+    gritty: {
+      type:'question',
+      text:'Does the soil feel or sound gritty?',
+      yes:'rollball', no:'weakball'
+    },
+    rollball: {
+      type:'question',
+      text:'Is it possible to roll the soil into a ball?',
+      yes:'stickball', no:'r_sand'
+    },
+    stickball: {
+      type:'question',
+      text:'Is it difficult to make a ball and get it to stick together?',
+      yes:'r_loamysand', no:'r_sandyloam'
+    },
+    weakball: {
+      type:'question',
+      text:'Form the soil into a ball. Is the ball weak and easily broken, and does the soil feel silky or soapy?',
+      yes:'r_siltloam', no:'strongball'
+    },
+    strongball: {
+      type:'info',
+      text:'The soil forms a strong ball. Now squeeze a small quantity between finger and thumb with a sliding motion.',
+      next:'shiny'
+    },
+    shiny: {
+      type:'question',
+      text:'Does the soil surface become shiny?',
+      yes:'clayq', no:'threads'
+    },
+    threads: {
+      type:'question',
+      text:'Is it hard to change the shape of a soil ball, and can the soil be easily rolled out into threads?',
+      yes:'r_clayloam', no:'r_mediumloam'
+    },
+    clayq: {
+      type:'question',
+      text:'The clay content is high — the soil is very sticky when wet. Is it also gritty?',
+      yes:'r_sandyclay', no:'r_clay'
+    },
+    r_sand: { type:'result', title:'Sand',
+      desc:'Loose and gritty, it won\u2019t hold a ball at all. Sand drains and warms very fast but dries out quickly and holds few nutrients — it rewards frequent, light feeding and watering.' },
+    r_loamysand: { type:'result', title:'Loamy sand',
+      desc:'Mostly sand with just enough clay and silt to hold together reluctantly. Free-draining and easy to work, but still light on moisture and nutrient retention.' },
+    r_sandyloam: { type:'result', title:'Sandy loam',
+      desc:'Gritty, but it holds together well once worked. A good general-purpose soil — easy to cultivate, drains well, and takes organic matter kindly.' },
+    r_siltloam: { type:'result', title:'Silt loam',
+      desc:'Smooth and silky rather than gritty, forming a ball that breaks apart easily. Fertile and moisture-retentive, but prone to compacting and crusting over if walked on when wet.' },
+    r_clayloam: { type:'result', title:'Clay loam',
+      desc:'A strong ball with a little grit, and threads that roll out only with effort. Fertile and moisture-retentive, with reasonable structure — heavier to work than a medium loam but rewarding.' },
+    r_mediumloam: { type:'result', title:'Medium loam',
+      desc:'The balanced, workable ideal — not shiny, and threads are hard to roll out. Good structure, fertility and drainage all at once, with none of the extremes of sand or clay.' },
+    r_sandyclay: { type:'result', title:'Sandy clay',
+      desc:'Very sticky when wet and noticeably gritty. Heavy and slow-draining, with a tendency to compact — organic matter and avoiding cultivation when wet both help.' },
+    r_clay: { type:'result', title:'Clay',
+      desc:'Smooth, shiny under pressure, very sticky, and rolls easily into long threads. Rich in nutrients and holds moisture well, but is heavy going — hard when dry, waterlogged when wet, and best cultivated only around field capacity.' }
+  };
+
+  var walkoverEngine = makeEngine({
+    nodes: walkoverNodes, startId:'start',
+    stageId:'walkover-stage', crumbsId:'walkover-crumbs', backId:'walkover-backrow'
+  });
+  var handEngine = makeEngine({
+    nodes: handNodes, startId:'start',
+    stageId:'hand-stage', crumbsId:'hand-crumbs', backId:'hand-backrow'
+  });
+
+  // ---------- PIT TEST (checklist) ----------
+  var pitItems = [
+    { id:'topsoil', q:'Is the topsoil dark, with white subsoil visible a few inches below the surface?',
+      result:{ title:'Chalky soil', desc:'A pale, often white subsoil sitting close under a dark topsoil is the signature of chalk. Expect an alkaline, usually shallow, free-draining soil.' } },
+    { id:'pan', q:'Is a sub-surface pan present — a hard layer with the texture and firmness of baked clay (sometimes, but not always, rusty brown)?',
+      result:{ title:'Poorly-drained soil', desc:'A hard sub-surface pan stops water passing through, so it collects above the pan and roots struggle to get past it. Breaking up the pan or improving drainage will help.' } },
+    { id:'streaks', q:'Are there blue-grey or rusty brown streaks in the subsoil?',
+      result:{ title:'Poorly-drained soil', desc:'Blue-grey and rusty mottling is what waterlogged soil looks like underground — it forms where air can\u2019t reach the subsoil for long stretches.' } }
+  ];
+  var pitAnswers = {};
+
+  function renderPit(){
+    var wrap = document.getElementById('pit-checklist');
+    wrap.innerHTML = '';
+    pitItems.forEach(function(item){
+      var el = document.createElement('div');
+      el.className = 'check-item';
+      var yesSel = pitAnswers[item.id] === true;
+      var noSel = pitAnswers[item.id] === false;
+      el.innerHTML = '<p>' + item.q + '</p>' +
+        '<div class="toggle-row">' +
+          '<button class="toggle ' + (yesSel ? 'selected yes' : '') + '" data-id="' + item.id + '" data-val="yes">Yes</button>' +
+          '<button class="toggle ' + (noSel ? 'selected no' : '') + '" data-id="' + item.id + '" data-val="no">No</button>' +
+        '</div>';
+      wrap.appendChild(el);
+    });
+    wrap.querySelectorAll('.toggle').forEach(function(btn){
+      btn.onclick = function(){
+        var id = btn.getAttribute('data-id');
+        var val = btn.getAttribute('data-val') === 'yes';
+        pitAnswers[id] = val;
+        renderPit();
+      };
+    });
+  }
+  renderPit();
+
+  document.getElementById('pit-reveal').onclick = function(){
+    var findingsEl = document.getElementById('pit-findings');
+    findingsEl.innerHTML = '';
+    var seenTitles = {};
+    var any = false;
+    pitItems.forEach(function(item){
+      if(pitAnswers[item.id] === true && !seenTitles[item.result.title]){
+        seenTitles[item.result.title] = true;
+        any = true;
+        var f = document.createElement('div');
+        f.className = 'finding';
+        f.innerHTML = '<div class="tag">Finding</div><h3>' + item.result.title + '</h3><p>' + item.result.desc + '</p>';
+        findingsEl.appendChild(f);
+      }
+    });
+    if(!any){
+      var none = document.createElement('div');
+      none.className = 'none-found';
+      none.textContent = 'No chalky, pan or mottling signs checked yet — answer at least one \u201cYes\u201d above, or head to the Hand Test for texture instead.';
+      findingsEl.appendChild(none);
+    }
+  };
+
+  // ---------- WEEDS & pH (checklist) ----------
+  var weedItems = [
+    { id:'w_wet', q:'Are rushes and sedges present, or is the surface covered with moss and/or green slime?',
+      result:{ title:'Poorly-drained soil', desc:'Rushes, sedges, moss and algae all favour ground that stays wet — a strong sign drainage needs attention.' } },
+    { id:'w_acid', q:'Do the main weeds include dock, thistle, daisy, plantain or creeping buttercup? Are rhododendron, azalea, heather or camellia thriving?',
+      result:{ title:'Acid soil', desc:'These weeds, and healthy ericaceous shrubs, both point to a low soil pH.' } },
+    { id:'w_alk', q:'Do the main weeds include clover? Are the leaves of rhododendron, azalea or camellia yellowing?',
+      result:{ title:'Alkaline soil', desc:'Clover thrives in alkaline ground, and yellowing (chlorotic) leaves on lime-hating shrubs are a classic sign of high pH.' } },
+    { id:'w_fert', q:'Do the main weeds include stinging nettle, sow-thistle, fat-hen, chickweed or groundsel?',
+      result:{ title:'Fertile soil', desc:'These weeds are all nitrogen-lovers that crop up thickest where fertility is already good.' } }
+  ];
+  var weedAnswers = {};
+
+  function renderWeeds(){
+    var wrap = document.getElementById('weeds-checklist');
+    wrap.innerHTML = '';
+    weedItems.forEach(function(item){
+      var el = document.createElement('div');
+      el.className = 'check-item';
+      var yesSel = weedAnswers[item.id] === true;
+      var noSel = weedAnswers[item.id] === false;
+      el.innerHTML = '<p>' + item.q + '</p>' +
+        '<div class="toggle-row">' +
+          '<button class="toggle ' + (yesSel ? 'selected yes' : '') + '" data-id="' + item.id + '" data-val="yes">Yes</button>' +
+          '<button class="toggle ' + (noSel ? 'selected no' : '') + '" data-id="' + item.id + '" data-val="no">No</button>' +
+        '</div>';
+      wrap.appendChild(el);
+    });
+    wrap.querySelectorAll('.toggle').forEach(function(btn){
+      btn.onclick = function(){
+        var id = btn.getAttribute('data-id');
+        var val = btn.getAttribute('data-val') === 'yes';
+        weedAnswers[id] = val;
+        renderWeeds();
+        renderWeedFindings();
+      };
+    });
+  }
+  function renderWeedFindings(){
+    var findingsEl = document.getElementById('weeds-findings');
+    findingsEl.innerHTML = '';
+    var any = false;
+    weedItems.forEach(function(item){
+      if(weedAnswers[item.id] === true){
+        any = true;
+        var f = document.createElement('div');
+        f.className = 'finding';
+        f.innerHTML = '<div class="tag">Sign</div><h3>' + item.result.title + '</h3><p>' + item.result.desc + '</p>';
+        findingsEl.appendChild(f);
+      }
+    });
+    if(!any){
+      var none = document.createElement('div');
+      none.className = 'none-found';
+      none.textContent = 'Check off what you see above — signs appear here as you go.';
+      findingsEl.appendChild(none);
+    }
+  }
+  renderWeeds();
+  renderWeedFindings();
+
+  // ---------- TABS ----------
+  document.getElementById('tabs').addEventListener('click', function(e){
+    var btn = e.target.closest('.tab');
+    if(!btn) return;
+    document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+    document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.getAttribute('data-panel')).classList.add('active');
+  });
+
+})();
+</script>
+</body>
+</html>
